@@ -1,16 +1,37 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] GameObject settingsMenu;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void PlayButton()
+    {
+        Debug.Log("Play");
+        SceneManager.LoadScene("House");
+    }
+
+    public void SettingsButton()
+    {
+        Debug.Log("Settings");
+        gameObject.SetActive(false);
+        settingsMenu.SetActive(true);
+    }
+
+    public void QuitButton()
+    {
+        Application.Quit();
+        Debug.Log("Quit");
     }
 }
