@@ -6,7 +6,6 @@ public class SettingsMenu : MonoBehaviour
 {
     [Header("Other")]
     [SerializeField] private GameInformation gameInformation;
-    [SerializeField] private AudioSource backgroundTheme;
     [SerializeField] private GameObject previousMenu;
 
     [Header("Music")]
@@ -40,8 +39,6 @@ public class SettingsMenu : MonoBehaviour
 
         gameInformation.MusicVolume = musicSlider.value;
         gameInformation.SFXVolume = SFXSlider.value;
-
-        backgroundTheme.volume = gameInformation.MusicVolume / 10;
     }
 
     public void BackButton()

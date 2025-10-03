@@ -1,14 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class MenuManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
+    [Header("Misc")]
+    [SerializeField] private GameInformation gameInformation;
     [SerializeField] private InputActionReference pauseAction;
     private bool gamePaused;
 
     [Header("Menus")]
-    [SerializeField] private GameObject pauseMenu;
-    [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private GameObject[] menus;
+
+    [Header("Music")]
+    [SerializeField] private AudioSource currentTheme;
 
 
     void Start()
@@ -30,14 +35,17 @@ public class MenuManager : MonoBehaviour
 
     private void OnPause(InputAction.CallbackContext ctx)
     {
-        gamePaused = !gamePaused;
-        pauseMenu.SetActive(gamePaused);
+        if (SceneManager.GetActiveScene().name != "MainMenu") 
+        {
+            gamePaused = !gamePaused;
+            menus[0].SetActive(gamePaused);
 
-        Time.timeScale = gamePaused ? 1f : 0f;
+            Time.timeScale = gamePaused ? 0f : 1f;
+        }
     }
 
     void Update()
     {
-        
+        currentTheme.volume = gameInformation.MusicVolume / 10;
     }
 }

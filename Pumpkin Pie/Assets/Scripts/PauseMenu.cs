@@ -14,12 +14,6 @@ public class PauseMenu : MonoBehaviour
         
     }
 
-    public void ResumeButton()
-    {
-        Time.timeScale = 1f;
-        gameObject.SetActive(false);
-    }
-
     public void SettingsButton()
     {
         gameObject.SetActive(false);
@@ -30,4 +24,5 @@ public class PauseMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
 }
