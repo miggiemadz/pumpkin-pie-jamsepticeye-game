@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -7,8 +8,8 @@ public class CharacterController : MonoBehaviour
     [Header("Player Interactions")]
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private InputActionReference interact;
-    private bool isNPCInteract;
-    private bool isSceneChangerInteract;
+    private GameObject interactable;
+    private string interactType;
 
     [Header("Player Movement")]
     [SerializeField] private float moveSpeed;
@@ -28,12 +29,29 @@ public class CharacterController : MonoBehaviour
     private void OnDisable()
     {
         interact.action.performed -= OnInteract;
-        interact.action.Disable();
     }
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        
+        if (interactable != null && !dialogueBox.activeSelf)
+        {
+            if (interactType == "NPC")
+            {
+                if (interactable.GetComponent<Grandma>() != null)
+                {
+                    Grandma grandma = interactable.GetComponent <Grandma>();
+                    grandma.IsInteracted = true;
+                    grandma.TriggerDialogue();
+                    dialogueBox.GetComponent<DialogueBox>().CreateDialogueBox(grandma.Headshots, grandma.Texts);
+                }
+                dialogueBox.SetActive(true);
+            }
+
+            if (interactType == "Scene Changer")
+            {
+                SceneManager.LoadScene(interactable.GetComponent<SceneChanger>().SceneName);
+            }
+        }
     }
 
     void Start()
@@ -57,34 +75,46 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!dialogueBox.activeSelf)
-        {
-            if (other.CompareTag("NPC"))
-            {
-                isNPCInteract = true;
-            }
+        interactable = other.gameObject;
 
-            if (other.CompareTag("SceneChanger"))
+        if (interactable.CompareTag("NPC"))
+        {
+            interactType = "NPC";
+
+            if (other.GetComponent<Grandma>() != null)
             {
-                SceneChanger sc = other.GetComponent<SceneChanger>();
-                sc.InteractPrompt.gameObject.SetActive(true);
+                Grandma grandma = other.GetComponent<Grandma>();
+                grandma.InteractPrompt.gameObject.SetActive(true);
             }
         }
-        
+
+        if (interactable.CompareTag("SceneChanger"))
+        {
+            interactType = "Scene Changer";
+
+            SceneChanger sc = interactable.GetComponent<SceneChanger>();
+            sc.InteractPrompt.gameObject.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("NPC"))
+        if (interactable.CompareTag("NPC"))
         {
-
+            if (other.GetComponent<Grandma>() != null)
+            {
+                Grandma grandma = other.GetComponent<Grandma>();
+                grandma.InteractPrompt.gameObject.SetActive(false);
+            }
         }
 
-        if (other.CompareTag("SceneChanger"))
+        if (interactable.CompareTag("SceneChanger"))
         {
-            SceneChanger sc = other.GetComponent<SceneChanger>();
+            SceneChanger sc = interactable.GetComponent<SceneChanger>();
             sc.InteractPrompt.gameObject.SetActive(false);
         }
 
+        interactable = null;
+        interactType = null;
     }
 }

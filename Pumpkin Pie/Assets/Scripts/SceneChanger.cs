@@ -9,9 +9,6 @@ public class SceneChanger : MonoBehaviour
 {
     [Header("Misc")]
     [SerializeField] private GameInformation gameInformation;
-
-    [Header("Trigger")]
-    [SerializeField] private SphereCollider sphereCollider;
     [SerializeField] private SpriteRenderer interactPrompt;
 
     [Header("Scene")]
@@ -21,13 +18,14 @@ public class SceneChanger : MonoBehaviour
     private string sceneName;
 
     public SpriteRenderer InteractPrompt { get => interactPrompt; set => interactPrompt = value; }
+    public string SceneName { get => sceneName; set => sceneName = value; }
 
     private void OnValidate()
     {
 #if UNITY_EDITOR
         if (scene != null)
         {
-            sceneName = scene.name;
+            SceneName = scene.name;
         }
 #endif
     }

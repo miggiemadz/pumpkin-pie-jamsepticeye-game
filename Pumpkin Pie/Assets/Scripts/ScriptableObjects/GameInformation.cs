@@ -10,6 +10,15 @@ public class GameInformation : ScriptableObject
     private float musicVolume = 10;
     private float sfxVolume = 10;
 
+    // Grandma Checkpoints
+    public enum GrandmaCheckpoints
+    {
+        Intro,
+        Ingredients,
+        PrePie,
+        PostPie
+    }
+
     // Ingredients
     private bool hasMilk;
     private bool hasSugar;
@@ -24,6 +33,8 @@ public class GameInformation : ScriptableObject
     // Tools
     private bool hasToolBox;
     private bool hasMiceSpray;
+
+    private GrandmaCheckpoints currentCheckpoint = 0;
 
     public string LastScene { get => lastScene; set => lastScene = value; }
 
@@ -41,4 +52,6 @@ public class GameInformation : ScriptableObject
 
     public bool HasToolBox { get => hasToolBox; set => hasToolBox = value; }
     public bool HasMiceSpray { get => hasMiceSpray; set => hasMiceSpray = value; }
+
+    public GrandmaCheckpoints CurrentCheckpoint { get => currentCheckpoint; set => currentCheckpoint = value; }
 }

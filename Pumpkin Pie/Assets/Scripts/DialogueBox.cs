@@ -12,15 +12,14 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private Image headshot;
     [SerializeField] private TextMeshProUGUI text;
 
-    [SerializeField] private List<Sprite> headshots;
-    [SerializeField] private List<string> texts;
+    private List<Sprite> headshots = new List<Sprite>();
+    private List<string> texts = new List<string>(); 
     private int pointer;
     private int maxPointer;
 
     void Start()
     {
         pointer = 0;
-        maxPointer = texts.Count;
     }
 
     private void OnEnable()
@@ -32,7 +31,6 @@ public class DialogueBox : MonoBehaviour
     private void OnDisable()
     {
         interact.action.performed -= OnInteract;
-        interact.action.Disable();
     }
 
     private void OnInteract(InputAction.CallbackContext context)
@@ -42,10 +40,25 @@ public class DialogueBox : MonoBehaviour
 
     void Update()
     {
-        if (pointer < maxPointer)
+        if (pointer < maxPointer && headshots.Count > 0 && texts.Count > 0)
         {
             headshot.sprite = headshots[pointer];
             text.text = texts[pointer];
         }
+
+        if (pointer == maxPointer)
+        {
+            headshots.Clear();
+            texts.Clear();
+            pointer = 0;
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void CreateDialogueBox(List<Sprite> headshots, List<string> texts)
+    {
+        this.headshots = new List<Sprite>(headshots);
+        this.texts = new List<string>(texts);
+        maxPointer = headshots.Count;
     }
 }
