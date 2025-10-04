@@ -747,7 +747,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1401fa90ff1b8234581da99e3b136e82, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 1401fa90ff1b8234581da99e3b136e82, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -2055,6 +2055,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsMenu: {fileID: 783486832}
+  newScene: {fileID: 102900000, guid: 77b3077d6b3b2c24aa0b7273b2269d95, type: 3}
+  sceneList:
+  - {fileID: 102900000, guid: 5ac1355ed63530f40b272d174c587673, type: 3}
+  - {fileID: 102900000, guid: 5eac0be56dbeeb54f80c95cb84ee4d11, type: 3}
+  - {fileID: 102900000, guid: bb3e881f871ec0b47857d0389e42e8e6, type: 3}
+  sceneName: House(SonsRoom)
+  sceneNames:
+  - House(Kitchen)
+  - House(Outside)
+  - House(GrandparentsRoom)
 --- !u!1001 &7936606207171585335
 PrefabInstance:
   m_ObjectHideFlags: 0
