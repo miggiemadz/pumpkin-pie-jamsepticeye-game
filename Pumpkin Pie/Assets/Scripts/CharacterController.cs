@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private InputActionReference interact;
     private GameObject interactable;
     private string interactType;
+    private bool isDialogueOpen;
 
     [Header("Player Movement")]
     [SerializeField] private float moveSpeed;
@@ -33,11 +34,11 @@ public class CharacterController : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        if (interactable != null && !dialogueBox.activeSelf)
+        if (interactable != null)
         {
             if (interactType == "NPC")
             {
-                if (interactable.GetComponent<Grandma>() != null)
+                if (interactable.GetComponent<Grandma>() != null && !isDialogueOpen)
                 {
                     Grandma grandma = interactable.GetComponent <Grandma>();
                     grandma.IsInteracted = true;
@@ -61,7 +62,8 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        
+        isDialogueOpen = IsDialogueOpen();
+
         moveDirection = move.action.ReadValue<Vector2>();
 
         animator.SetFloat("movementx", moveDirection.x);
@@ -71,6 +73,11 @@ public class CharacterController : MonoBehaviour
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.y * moveSpeed); // Keep gravity on Y
+    }
+
+    private bool IsDialogueOpen()
+    {
+        return dialogueBox.activeSelf;
     }
 
     private void OnTriggerEnter(Collider other)

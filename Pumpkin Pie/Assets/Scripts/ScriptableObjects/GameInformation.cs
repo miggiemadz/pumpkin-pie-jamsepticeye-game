@@ -19,20 +19,30 @@ public class GameInformation : ScriptableObject
         PostPie
     }
 
+    // Notes
+    private bool hasNote1 = false;
+    private bool hasNote2 = false;
+    private bool hasNote3 = false;
+    private bool hasNote4 = false;
+
     // Ingredients
-    private bool hasMilk;
-    private bool hasSugar;
-    private bool hasCinammon;
-    private bool hasEggs;
-    private bool hasPumpkin;
+    private bool hasMilk = false;
+    private bool hasSugar = false;
+    private bool hasCinammon = false;
+    private bool hasEggs = false;
+    private bool hasPumpkin = false;
 
     // Keys
-    private bool hasBarnKey;
-    private bool hasShedKey;
+    private bool hasBarnKey = false;
+    private bool hasShedKey = false;
 
     // Tools
-    private bool hasToolBox;
-    private bool hasMiceSpray;
+    private bool hasToolBox = false;
+    private bool hasMiceSpray = false;
+    private bool hasStraw = false;
+
+    // Ending
+    private bool hasPumpkinPie = false;
 
     private GrandmaCheckpoints currentCheckpoint = 0;
 
@@ -54,4 +64,10 @@ public class GameInformation : ScriptableObject
     public bool HasMiceSpray { get => hasMiceSpray; set => hasMiceSpray = value; }
 
     public GrandmaCheckpoints CurrentCheckpoint { get => currentCheckpoint; set => currentCheckpoint = value; }
+    public bool HasPumpkinPie { get => hasPumpkinPie; set => hasPumpkinPie = value; }
+    public bool HasStraw { get => hasStraw; set => hasStraw = value; }
+    public bool HasNote1 { get => hasNote1; set => hasNote1 = value; }
+    public bool HasNote2 { get => hasNote2; set => hasNote2 = value; }
+    public bool HasNote3 { get => hasNote3; set => hasNote3 = value; }
+    public bool HasNote4 { get => hasNote4; set => hasNote4 = value; }
 }
