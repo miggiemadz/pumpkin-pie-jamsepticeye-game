@@ -12,7 +12,7 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private Image headshot;
     [SerializeField] private TextMeshProUGUI text;
 
-    [SerializeField] private List<Image> headshots;
+    [SerializeField] private List<Sprite> headshots;
     [SerializeField] private List<string> texts;
     private int pointer;
     private int maxPointer;
@@ -44,7 +44,7 @@ public class DialogueBox : MonoBehaviour
     {
         if (pointer < maxPointer)
         {
-            headshot = headshots[pointer];
+            headshot.sprite = headshots[pointer];
             text.text = texts[pointer];
         }
     }

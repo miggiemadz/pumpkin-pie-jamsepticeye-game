@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InputActionReference pauseAction;
     private bool gamePaused;
 
-    [Header("Menus")]
+    [Header("UI")]
     [SerializeField] private GameObject[] menus;
 
     [Header("Music")]
