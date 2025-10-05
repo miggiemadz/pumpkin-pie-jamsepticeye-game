@@ -6,11 +6,11 @@ public class Grandma : MonoBehaviour
 {
     [Header("Interactions")]
     [SerializeField] private GameObject interactPrompt;
-    private bool isInteracted;
 
-    [Header("Checkpoints")]
+    [Header("Source Files")]
     [SerializeField] private GameInformation gameInformation;
-    private string checkpoint;
+    [SerializeField] private Checklist checklist;
+    private GameInformation.GrandmaCheckpoints checkpoint;
 
     [Header("Dialogue")]
     [SerializeField] private Sprite gh;
@@ -20,13 +20,13 @@ public class Grandma : MonoBehaviour
 
     public List<Sprite> Headshots { get => headshots; set => headshots = value; }
     public List<string> Texts { get => texts; set => texts = value; }
-    public bool IsInteracted { get => isInteracted; set => isInteracted = value; }
     public GameObject InteractPrompt { get => interactPrompt; set => interactPrompt = value; }
 
     void Start()
     {
-        
+        checklist = GameObject.Find("Checklist").GetComponent<Checklist>();
     }
+
     void Update()
     {
         
@@ -34,12 +34,13 @@ public class Grandma : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        checkpoint = gameInformation.CurrentCheckpoint.ToString();
-        if (IsInteracted)
-        {
+        headshots = new List<Sprite>();
+        texts = new List<string>();
+
+        checkpoint = gameInformation.CurrentCheckpoint;
             switch (checkpoint)
             {
-                case "Intro":
+                case GameInformation.GrandmaCheckpoints.Intro:
                     Sprite[] newHeadshots = { gh, sh, gh, sh, gh, sh, gh, gh, sh };
                     headshots.AddRange(newHeadshots);
                     string[] newTexts = { "Morning, sweetheat. Did you sleep well?",
@@ -53,13 +54,15 @@ public class Grandma : MonoBehaviour
                     "Okay Grandma. I'll find everything so fast, you won't even realize I'm gone."};
                     texts.AddRange(newTexts);
                     gameInformation.CurrentCheckpoint = GameInformation.GrandmaCheckpoints.Ingredients;
+                    gameInformation.CurrentQuests = GameInformation.Quests.Quest2;
+                    checklist.UpdateChecklist();
                     gameInformation.HasBarnKey = true;
                     break;
-                case "Ingredients":
+                case GameInformation.GrandmaCheckpoints.Ingredients:
                     headshots.Add(gh);
                     texts.Add("Remember, all we need are milk & eggs from the barn, sugar and cinnamon from the shed and pumkpin from the field.");
                     break;
-                case "Pre-Pumpkin Pie":
+                case GameInformation.GrandmaCheckpoints.PrePie:
                     Sprite[] newHeadshots1 = { sh, gh, sh, gh};
                     headshots.AddRange(newHeadshots1);
                     string[] newTexts1 = { "Grandma! Grandma! I got everything, took me a little while but I found every ingredient.",
@@ -68,7 +71,7 @@ public class Grandma : MonoBehaviour
                     "Of course, lets hurry, it's getting late."};
                     gameInformation.CurrentCheckpoint = GameInformation.GrandmaCheckpoints.PostPie;
                     break;
-                case "Post-Pumpkin Pie":
+                case GameInformation.GrandmaCheckpoints.PostPie:
                     Sprite[] newHeadshots2 = { };
                     headshots.AddRange(newHeadshots2);
                     string[] newTexts2 = { "Mmmmmm, that smells soo good grandma!",
@@ -79,7 +82,5 @@ public class Grandma : MonoBehaviour
                     gameInformation.HasPumpkinPie = true;
                     break;
             }
-            IsInteracted = false;
-        }
     }
 }

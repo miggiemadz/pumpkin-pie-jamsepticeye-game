@@ -4,9 +4,12 @@ using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
+    public static SettingsMenu Instance { get; private set; }
+
     [Header("Other")]
     [SerializeField] private GameInformation gameInformation;
     [SerializeField] private GameObject previousMenu;
+    [SerializeField] private GameManager gameManager;
 
     [Header("Music")]
     [SerializeField] private Slider musicSlider;
@@ -20,10 +23,23 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private RawImage SFXOffImage;
     [SerializeField] private TextMeshProUGUI SFXText;
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         musicSlider.value = gameInformation.MusicVolume;
         SFXSlider.value = gameInformation.SFXVolume;
+
+        previousMenu = gameManager.PreviousMenu;
     }
 
     void Update()

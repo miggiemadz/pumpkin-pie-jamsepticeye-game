@@ -10,6 +10,14 @@ public class GameInformation : ScriptableObject
     private float musicVolume = 10;
     private float sfxVolume = 10;
 
+    // Quests
+    public enum Quests
+    {
+        Quest1,
+        Quest2,
+        Quest3
+    }
+
     // Grandma Checkpoints
     public enum GrandmaCheckpoints
     {
@@ -45,6 +53,7 @@ public class GameInformation : ScriptableObject
     private bool hasPumpkinPie = false;
 
     private GrandmaCheckpoints currentCheckpoint = 0;
+    private Quests currentQuests = Quests.Quest1;
 
     public string LastScene { get => lastScene; set => lastScene = value; }
 
@@ -70,4 +79,5 @@ public class GameInformation : ScriptableObject
     public bool HasNote2 { get => hasNote2; set => hasNote2 = value; }
     public bool HasNote3 { get => hasNote3; set => hasNote3 = value; }
     public bool HasNote4 { get => hasNote4; set => hasNote4 = value; }
+    public Quests CurrentQuests { get => currentQuests; set => currentQuests = value; }
 }

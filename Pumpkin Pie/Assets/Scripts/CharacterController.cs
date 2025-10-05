@@ -42,7 +42,6 @@ public class CharacterController : MonoBehaviour
         {
             if (interactable.TryGetComponent(out Grandma grandma) && !isDialogueOpen)
             {
-                grandma.IsInteracted = true;
                 grandma.TriggerDialogue();
 
                 DialogueBox box = dialogueBox.GetComponent<DialogueBox>();
