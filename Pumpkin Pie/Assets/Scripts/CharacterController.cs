@@ -7,7 +7,10 @@ using UnityEngine.SceneManagement;
 public class CharacterController : MonoBehaviour
 {
     [Header("Player Interactions")]
-    [SerializeField] private GameObject dialogueBox;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private GameInformation gameInformation;
+    [SerializeField] private Checklist checkList;
+    [SerializeField] private DialogueBox dialogueBox;
     [SerializeField] private InputActionReference interact;
     private GameObject interactable;
     private string interactType;
@@ -21,6 +24,13 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
     private Vector2 moveDirection;
+
+    private void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        dialogueBox = gameManager.DialogueBox.GetComponent<DialogueBox>();
+        checkList = gameManager.Checklist.GetComponent<Checklist>();
+    }
 
     private void OnEnable()
     {
@@ -47,7 +57,19 @@ public class CharacterController : MonoBehaviour
                 DialogueBox box = dialogueBox.GetComponent<DialogueBox>();
                 box.CreateDialogueBox(grandma.Headshots, grandma.Texts);
 
-                dialogueBox.SetActive(true);
+                dialogueBox.gameObject.SetActive(true);
+            }
+
+            if (interactable.TryGetComponent(out Animals animal) && !isDialogueOpen)
+            {
+                animal.TriggerDialogue();
+
+                DialogueBox box = dialogueBox.GetComponent<DialogueBox>();
+                box.CreateDialogueBox(animal.Headshots, animal.DialogueText);
+
+                dialogueBox.gameObject.SetActive(true);
+
+                checkList.UpdateChecklist();
             }
         }
 
@@ -81,7 +103,7 @@ public class CharacterController : MonoBehaviour
 
     private bool IsDialogueOpen()
     {
-        return dialogueBox != null && dialogueBox.activeSelf;
+        return dialogueBox != null && dialogueBox.gameObject.activeSelf;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -95,6 +117,11 @@ public class CharacterController : MonoBehaviour
             if (interactable.TryGetComponent(out Grandma grandma))
             {
                 grandma.InteractPrompt.gameObject.SetActive(true);
+            }
+
+            if (interactable.TryGetComponent(out Animals animal))
+            {
+                animal.InteractPrompt.gameObject.SetActive(true);
             }
         }
 
@@ -118,6 +145,11 @@ public class CharacterController : MonoBehaviour
             if (interactable.TryGetComponent(out Grandma grandma))
             {
                 grandma.InteractPrompt.gameObject.SetActive(false);
+            }
+
+            if (interactable.TryGetComponent(out Animals animal))
+            {
+                animal.InteractPrompt.gameObject.SetActive(false);
             }
         }
 

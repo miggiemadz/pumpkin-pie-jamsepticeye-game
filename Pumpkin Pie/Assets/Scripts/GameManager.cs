@@ -10,14 +10,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameInformation gameInformation;
     [SerializeField] private InputActionReference pauseAction;
     private bool gamePaused;
+    private Camera camera;
 
     [Header("UI")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject settingsMenu;
     [SerializeField] private GameObject previousMenu;
     [SerializeField] private GameObject checklist;
+    [SerializeField] private GameObject dialogueBox;
 
     public GameObject PreviousMenu { get => previousMenu; set => previousMenu = value; }
+    public GameObject DialogueBox { get => dialogueBox; set => dialogueBox = value; }
+    public GameObject Checklist { get => checklist; set => checklist = value; }
 
     private void Awake()
     {
@@ -41,7 +45,7 @@ public class GameManager : MonoBehaviour
         gameInformation.HasPumpkin = false;
         gameInformation.HasEggs = false;
 
-        checklist.GetComponent<Checklist>().UpdateChecklist();
+        Checklist.GetComponent<Checklist>().UpdateChecklist();
     }
 
     private void OnEnable()
@@ -66,9 +70,12 @@ public class GameManager : MonoBehaviour
         else
         {
             previousMenu = pauseMenu;
-            checklist.SetActive(true);
-
+            Checklist.SetActive(true);
         }
+
+        camera = Camera.main;
+        camera.clearFlags = CameraClearFlags.Depth;
+        camera.backgroundColor = new Color(0f, .5687f, .7924f);
     }
 
     private void OnPause(InputAction.CallbackContext ctx)
