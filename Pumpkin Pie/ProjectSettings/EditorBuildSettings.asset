@@ -8,6 +8,51 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/House/House(SonsRoom).unity
+    guid: 77b3077d6b3b2c24aa0b7273b2269d95
+  - enabled: 1
+    path: Assets/Scenes/House/House(Kitchen).unity
+    guid: 5ac1355ed63530f40b272d174c587673
+  - enabled: 1
+    path: Assets/Scenes/House/House(GrandparentsRoom).unity
+    guid: bb3e881f871ec0b47857d0389e42e8e6
+  - enabled: 1
+    path: Assets/Scenes/House/House(Outside).unity
+    guid: 5eac0be56dbeeb54f80c95cb84ee4d11
+  - enabled: 1
+    path: Assets/Scenes/Connectors/Connector(HouseBarn).unity
+    guid: b1149eafd97229743bfd45fbb2cc8569
+  - enabled: 1
+    path: Assets/Scenes/Barn/Barn(Outside).unity
+    guid: 105c6e000c2d262409f218c5cfa9972f
+  - enabled: 1
+    path: Assets/Scenes/Barn/Barn(CowPen).unity
+    guid: f9185292d5147ab438a851f9a7669224
+  - enabled: 1
+    path: Assets/Scenes/Barn/Barn(ChickenCoop).unity
+    guid: fc964ea93791ead4984506e4ecf8d238
+  - enabled: 1
+    path: Assets/Scenes/Connectors/Connector(BarnShed).unity
+    guid: 464b68568e2b3024f86191be33ff9174
+  - enabled: 1
+    path: Assets/Scenes/Shed/Shed(Outside).unity
+    guid: 8e9eb46034d817a4291933ac9b4d2976
+  - enabled: 1
+    path: Assets/Scenes/Shed/Shed(Entrance).unity
+    guid: 7b6355feff9e3ec43ad57d2f11daf950
+  - enabled: 1
+    path: Assets/Scenes/Shed/Shed(ToolRoom).unity
+    guid: f7a687327f2f0fb42af4bd2d277582ac
+  - enabled: 1
+    path: Assets/Scenes/Shed/Shed(Pantry).unity
+    guid: ef2484781cae39f4ab7fc98253745d9f
+  - enabled: 1
+    path: Assets/Scenes/Connectors/Connector(BarnField).unity
+    guid: be544269e447c9845b57e37ebfd0a7bc
+  - enabled: 1
+    path: Assets/Scenes/Field.unity
+    guid: 57bff286d8634044dbd0e2806eb682e8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
