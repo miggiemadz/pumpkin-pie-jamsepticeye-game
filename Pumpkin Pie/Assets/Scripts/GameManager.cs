@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
         camera = Camera.main;
         camera.clearFlags = CameraClearFlags.Depth;
-        camera.backgroundColor = new Color(0f, .5687f, .7924f);
+        camera.backgroundColor = new Color(0f, 0f, 0f);
     }
 
     private void OnPause(InputAction.CallbackContext ctx)
