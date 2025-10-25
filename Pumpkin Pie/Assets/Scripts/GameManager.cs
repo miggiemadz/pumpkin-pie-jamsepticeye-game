@@ -1,3 +1,6 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -38,6 +41,8 @@ public class GameManager : MonoBehaviour
     {
         gameInformation.CurrentCheckpoint = 0;
         gameInformation.CurrentQuests = 0;
+
+        gameInformation.InitialMonologe = false;
 
         gameInformation.HasMilk = false;
         gameInformation.HasSugar = false;

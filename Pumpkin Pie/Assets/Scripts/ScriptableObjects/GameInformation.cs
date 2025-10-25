@@ -10,21 +10,24 @@ public class GameInformation : ScriptableObject
     private float musicVolume = 10;
     private float sfxVolume = 10;
 
+    // Initial monologue
+    private bool initialMonologe = false;
+
     // Quests
     public enum Quests
     {
-        Quest1,
-        Quest2,
-        Quest3
+        Quest1, // Talk to Grandma
+        Quest2, // Get Ingredients
+        Quest3 // Give grandpa pie
     }
 
     // Grandma Checkpoints
     public enum GrandmaCheckpoints
     {
-        Intro,
-        Ingredients,
-        PrePie,
-        PostPie
+        Intro, // First ever conversation
+        Ingredients, // After first conversation
+        PrePie, // Before aqcuiring all ingredients
+        PostPie // After acquiring all ingredients
     }
 
     // Notes
@@ -80,4 +83,5 @@ public class GameInformation : ScriptableObject
     public bool HasNote3 { get => hasNote3; set => hasNote3 = value; }
     public bool HasNote4 { get => hasNote4; set => hasNote4 = value; }
     public Quests CurrentQuests { get => currentQuests; set => currentQuests = value; }
+    public bool InitialMonologe { get => initialMonologe; set => initialMonologe = value; }
 }

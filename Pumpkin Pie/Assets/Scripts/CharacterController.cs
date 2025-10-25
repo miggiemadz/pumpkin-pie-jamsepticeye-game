@@ -25,11 +25,42 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private Animator animator;
     private Vector2 moveDirection;
 
+    [Header("Monologue UI")]
+    [SerializeField] private Sprite sh;
+    private List<string> texts = new List<string>();
+    private List<Sprite> headshots = new List<Sprite>();
+
     private void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         dialogueBox = gameManager.DialogueBox.GetComponent<DialogueBox>();
         checkList = gameManager.Checklist.GetComponent<Checklist>();
+
+        Debug.Log(SceneManager.GetActiveScene().buildIndex);
+        if (SceneManager.GetActiveScene().buildIndex == 1 && !gameInformation.InitialMonologe)
+        {
+            texts = new List<string>();
+            headshots = new List<Sprite>();
+
+            Sprite[] newHeadshots = { sh, sh, sh };
+            string[] newTexts = { "*yawnnnn....",
+            "All that barn work yesterday killed me.",
+            "I wonder what Grandma is up to."};
+            headshots.AddRange(newHeadshots);
+            texts.AddRange(newTexts);
+
+            DialogueBox box = dialogueBox.GetComponent<DialogueBox>();
+            box.CreateDialogueBox(headshots, texts);
+
+            dialogueBox.gameObject.SetActive(true);
+
+            gameInformation.InitialMonologe = true;
+        }
+    }
+
+    private void Awake()
+    {
+        
     }
 
     private void OnEnable()
@@ -77,7 +108,30 @@ public class CharacterController : MonoBehaviour
         {
             if (interactable.TryGetComponent(out SceneChanger sc))
             {
-                sc.ChangeScene();
+                if (interactable.name == "GrandpaDoor" && gameInformation.CurrentQuests != GameInformation.Quests.Quest3)
+                {
+                    if (!isDialogueOpen)
+                    {
+                        headshots = new List<Sprite>();
+                        texts = new List<string>();
+
+                        Sprite[] newHeadshots = { sh, sh };
+                        string[] newTexts = { "Granpda is sleeping right now, I don't want to wake him up.",
+                    "Let's make sure we get those ingredients for that Pumpkin Pie."};
+
+                        headshots.AddRange(newHeadshots);
+                        texts.AddRange(newTexts);
+
+                        DialogueBox box = dialogueBox.GetComponent<DialogueBox>();
+                        box.CreateDialogueBox(headshots, texts);
+
+                        dialogueBox.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    sc.ChangeScene();
+                }
             }
         }
     }
@@ -85,8 +139,10 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         isDialogueOpen = IsDialogueOpen();
-
-        moveDirection = move.action.ReadValue<Vector2>();
+        if (!isDialogueOpen) 
+        { 
+            moveDirection = move.action.ReadValue<Vector2>();
+        }
 
         animator.SetFloat("movementx", moveDirection.x);
         animator.SetFloat("movementy", moveDirection.y);
@@ -94,11 +150,14 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(
-            moveDirection.x * moveSpeed,
-            rb.linearVelocity.y,
-            moveDirection.y * moveSpeed
-        );
+        if (!isDialogueOpen)
+        {
+            rb.linearVelocity = new Vector3(
+                moveDirection.x * moveSpeed,
+                rb.linearVelocity.y,
+                moveDirection.y * moveSpeed
+            );
+        }
     }
 
     private bool IsDialogueOpen()

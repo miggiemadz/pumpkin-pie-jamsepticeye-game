@@ -22,7 +22,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private SceneAsset newScene;
     [SerializeField] private List<SceneAsset> sceneList = new List<SceneAsset>();
 #endif
-
+    [SerializeField] private string lastScene;
     [SerializeField] private string sceneName;
     [SerializeField] private List<string> sceneNames = new List<string>();
 
@@ -54,6 +54,8 @@ public class SceneChanger : MonoBehaviour
 
     private IEnumerator LoadScenesCoroutine()
     {
+        lastScene = SceneManager.GetActiveScene().name;
+
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.StopMusic(fadeTime);

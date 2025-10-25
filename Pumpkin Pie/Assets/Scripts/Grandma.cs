@@ -72,7 +72,7 @@ public class Grandma : MonoBehaviour
                     gameInformation.CurrentCheckpoint = GameInformation.GrandmaCheckpoints.PostPie;
                     break;
                 case GameInformation.GrandmaCheckpoints.PostPie:
-                    Sprite[] newHeadshots2 = { };
+                    Sprite[] newHeadshots2 = { sh, gh, sh, gh, sh};
                     headshots.AddRange(newHeadshots2);
                     string[] newTexts2 = { "Mmmmmm, that smells soo good grandma!",
                     "You're Grandpa's favorite Pumpkin Pie, I just know he will love it.",
