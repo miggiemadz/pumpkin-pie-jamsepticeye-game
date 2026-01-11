@@ -10,17 +10,27 @@ using System.Reflection;
 [InitializeOnLoad]
 public class ReadmeEditor : Editor
 {
+    // SessionState key used to ensure the readme is only shown automatically once per editor session.
     static string s_ShowedReadmeSessionStateName = "ReadmeEditor.showedReadme";
     
+    // Relative folder where the Tutorial/Readme assets live. Used by the removal helper.
     static string s_ReadmeSourceDirectory = "Assets/TutorialInfo";
 
     const float k_Space = 16f;
 
+    /// <summary>
+    /// Static constructor registers a delayed call to automatically select the Readme asset
+    /// when the editor starts. This mirrors Unity's example behavior for onboarding tutorials.
+    /// </summary>
     static ReadmeEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
     }
 
+    /// <summary>
+    /// Deletes the tutorial readme folder and the readme asset if the user confirms the action.
+    /// This helps users remove example assets from their project.
+    /// </summary>
     static void RemoveTutorial()
     {
         if (EditorUtility.DisplayDialog("Remove Readme Assets",
@@ -51,6 +61,10 @@ public class ReadmeEditor : Editor
         }
     }
 
+    /// <summary>
+    /// Attempts to select the Readme asset automatically the first time the editor loads in a session.
+    /// If the readme hasn't had the example layout loaded yet it will call LoadLayout.
+    /// </summary>
     static void SelectReadmeAutomatically()
     {
         if (!SessionState.GetBool(s_ShowedReadmeSessionStateName, false))
@@ -66,6 +80,10 @@ public class ReadmeEditor : Editor
         }
     }
 
+    /// <summary>
+    /// Loads a preconfigured window layout from the tutorial assets. Uses reflection to call
+    /// the internal UnityEditor.WindowLayout API so the example layout file can be applied.
+    /// </summary>
     static void LoadLayout()
     {
         var assembly = typeof(EditorApplication).Assembly;
@@ -74,6 +92,9 @@ public class ReadmeEditor : Editor
         method.Invoke(null, new object[] { Path.Combine(Application.dataPath, "TutorialInfo/Layout.wlt"), false });
     }
 
+    /// <summary>
+    /// Finds and selects the Readme asset in the project. Returns the Readme instance when found.
+    /// </summary>
     static Readme SelectReadme()
     {
         var ids = AssetDatabase.FindAssets("Readme t:Readme");
@@ -92,6 +113,9 @@ public class ReadmeEditor : Editor
         }
     }
 
+    /// <summary>
+    /// Renders the header section for the Readme in the inspector (icon and title).
+    /// </summary>
     protected override void OnHeaderGUI()
     {
         var readme = (Readme)target;
@@ -120,6 +144,10 @@ public class ReadmeEditor : Editor
         GUILayout.EndHorizontal();
     }
 
+    /// <summary>
+    /// Renders the custom inspector GUI for the Readme. Iterates through all sections and
+    /// draws headings, body text and clickable links. Also includes a button to remove tutorial assets.
+    /// </summary>
     public override void OnInspectorGUI()
     {
         var readme = (Readme)target;
@@ -196,6 +224,9 @@ public class ReadmeEditor : Editor
     [SerializeField]
     GUIStyle m_ButtonStyle;
 
+    /// <summary>
+    /// Initializes the GUIStyle objects used to render the readme. This only runs once.
+    /// </summary>
     void Init()
     {
         if (m_Initialized)
@@ -225,6 +256,13 @@ public class ReadmeEditor : Editor
         m_Initialized = true;
     }
 
+    /// <summary>
+    /// Draws a clickable label styled as a hyperlink. Also draws an underline using Handles
+    /// and changes the cursor to the link cursor when hovered.
+    /// </summary>
+    /// <param name="label">The content to render as a clickable link.</param>
+    /// <param name="options">Layout options forwarded to GUILayoutUtility.GetRect.</param>
+    /// <returns>True when the link was clicked.</returns>
     bool LinkLabel(GUIContent label, params GUILayoutOption[] options)
     {
         var position = GUILayoutUtility.GetRect(label, LinkStyle, options);

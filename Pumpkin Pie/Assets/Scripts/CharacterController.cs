@@ -7,36 +7,50 @@ using UnityEngine.SceneManagement;
 public class CharacterController : MonoBehaviour
 {
     [Header("Player Interactions")]
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private GameInformation gameInformation;
-    [SerializeField] private Checklist checkList;
-    [SerializeField] private DialogueBox dialogueBox;
-    [SerializeField] private InputActionReference interact;
-    private GameObject interactable;
-    private string interactType;
-    private bool isDialogueOpen;
+    [SerializeField]
+    private GameManager gameManager; // Central game manager reference
+    [SerializeField]
+    private GameInformation gameInformation; // Shared game state
+    [SerializeField]
+    private Checklist checkList; // Checklist manager reference
+    [SerializeField]
+    private DialogueBox dialogueBox; // Dialogue UI used to show conversations
+    [SerializeField]
+    private InputActionReference interact; // Input action used for interactions
+
+    private GameObject interactable; // Currently interactable object the player is near
+    private string interactType; // Type identifier for the interactable (e.g., "NPC" or "Scene Changer")
+    private bool isDialogueOpen; // Cached state of whether dialogue UI is currently open
 
     [Header("Player Movement")]
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private InputActionReference move;
+    [SerializeField]
+    private float moveSpeed = 5f; // Movement speed multiplier
+    [SerializeField]
+    private InputActionReference move; // Input action used for movement
 
     [Header("Components")]
-    [SerializeField] private Rigidbody rb;
-    [SerializeField] private Animator animator;
-    private Vector2 moveDirection;
+    [SerializeField]
+    private Rigidbody rb; // Rigidbody used for movement
+    [SerializeField]
+    private Animator animator; // Animator for player animations
+    private Vector2 moveDirection; // Current movement input vector
 
     [Header("Monologue UI")]
-    [SerializeField] private Sprite sh;
-    private List<string> texts = new List<string>();
-    private List<Sprite> headshots = new List<Sprite>();
+    [SerializeField]
+    private Sprite sh; // Default headshot used for the player's monologue
+    private List<string> texts = new List<string>(); // Temporary storage for monologue text
+    private List<Sprite> headshots = new List<Sprite>(); // Temporary storage for monologue headshots
 
     private void Start()
     {
+        // Cache common references from the GameManager
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         dialogueBox = gameManager.DialogueBox.GetComponent<DialogueBox>();
         checkList = gameManager.Checklist.GetComponent<Checklist>();
 
         Debug.Log(SceneManager.GetActiveScene().buildIndex);
+        // If we are in the first playable scene and the initial monologue hasn't run yet,
+        // populate and show a short monologue sequence.
         if (SceneManager.GetActiveScene().buildIndex == 1 && !gameInformation.InitialMonologe)
         {
             texts = new List<string>();
@@ -45,7 +59,7 @@ public class CharacterController : MonoBehaviour
             Sprite[] newHeadshots = { sh, sh, sh };
             string[] newTexts = { "*yawnnnn....",
             "All that barn work yesterday killed me.",
-            "I wonder what Grandma is up to."};
+            "I wonder what Grandma is up to." };
             headshots.AddRange(newHeadshots);
             texts.AddRange(newTexts);
 
@@ -60,27 +74,34 @@ public class CharacterController : MonoBehaviour
 
     private void Awake()
     {
-        
+        // Reserved for future initialization
     }
 
     private void OnEnable()
     {
+        // Subscribe to the interact action
         interact.action.Enable();
         interact.action.performed += OnInteract;
     }
 
     private void OnDisable()
     {
+        // Unsubscribe and disable the interact action
         interact.action.performed -= OnInteract;
         interact.action.Disable();
     }
 
+    /// <summary>
+    /// Called when the interact input action is performed. Handles interactions with NPCs and scene changers.
+    /// </summary>
+    /// <param name="context">Input callback context (unused).</param>
     private void OnInteract(InputAction.CallbackContext context)
     {
         if (interactable == null) return;
 
         if (interactType == "NPC")
         {
+            // Interact with NPC types: Grandma and Animals
             if (interactable.TryGetComponent(out Grandma grandma) && !isDialogueOpen)
             {
                 grandma.TriggerDialogue();
@@ -108,6 +129,7 @@ public class CharacterController : MonoBehaviour
         {
             if (interactable.TryGetComponent(out SceneChanger sc))
             {
+                // Special case: door to Grandpa is locked until certain quest state
                 if (interactable.name == "GrandpaDoor" && gameInformation.CurrentQuests != GameInformation.Quests.Quest3)
                 {
                     if (!isDialogueOpen)
@@ -117,7 +139,7 @@ public class CharacterController : MonoBehaviour
 
                         Sprite[] newHeadshots = { sh, sh };
                         string[] newTexts = { "Granpda is sleeping right now, I don't want to wake him up.",
-                    "Let's make sure we get those ingredients for that Pumpkin Pie."};
+                    "Let's make sure we get those ingredients for that Pumpkin Pie." };
 
                         headshots.AddRange(newHeadshots);
                         texts.AddRange(newTexts);
@@ -130,6 +152,7 @@ public class CharacterController : MonoBehaviour
                 }
                 else
                 {
+                    // Normal scene change flow
                     sc.ChangeScene();
                 }
             }
@@ -141,9 +164,11 @@ public class CharacterController : MonoBehaviour
         isDialogueOpen = IsDialogueOpen();
         if (!isDialogueOpen) 
         { 
+            // Read movement input only when dialogue is not open
             moveDirection = move.action.ReadValue<Vector2>();
         }
 
+        // Update animator parameters for movement blending
         animator.SetFloat("movementx", moveDirection.x);
         animator.SetFloat("movementy", moveDirection.y);
     }
@@ -152,6 +177,7 @@ public class CharacterController : MonoBehaviour
     {
         if (!isDialogueOpen)
         {
+            // Apply movement to the Rigidbody while preserving the vertical velocity
             rb.linearVelocity = new Vector3(
                 moveDirection.x * moveSpeed,
                 rb.linearVelocity.y,
@@ -160,6 +186,10 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns true when the dialogue box UI is currently active/open.
+    /// </summary>
+    /// <returns>True if dialogue is open; false otherwise.</returns>
     private bool IsDialogueOpen()
     {
         return dialogueBox != null && dialogueBox.gameObject.activeSelf;

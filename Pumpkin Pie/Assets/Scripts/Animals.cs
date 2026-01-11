@@ -4,17 +4,16 @@ using UnityEngine;
 public class Animals : MonoBehaviour
 {
     [Header("Interactions")]
-    [SerializeField] private GameObject interactPrompt;
-    [SerializeField] private GameInformation gameInformation;
+    [SerializeField] private GameObject interactPrompt; // UI prompt shown when player can interact
+    [SerializeField] private GameInformation gameInformation; // Shared game state
 
     [Header("Animal Info")]
-    [SerializeField] private string animalName;
-    [SerializeField] private int animalType;
-    [SerializeField] private Sprite ah;
-    [SerializeField] private Sprite sh;
-    [SerializeField] private Animator animator;
+    [SerializeField] private string animalName; // Human-readable name used to determine dialogue behaviour
+    [SerializeField] private int animalType; // Type variant used to switch between behaviors
+    [SerializeField] private Sprite ah; // Animal headshot
+    [SerializeField] private Sprite sh; // Player headshot used in dialogues
+    [SerializeField] private Animator animator; // Animal animator
 
-    
     private List<Sprite> headshots = new List<Sprite>();
     private List<string> dialogueText = new List<string>();
 
@@ -26,13 +25,18 @@ public class Animals : MonoBehaviour
 
     void Start()
     {
+        // Initialize animator parameter for animal visuals
         animator.SetInteger("type", AnimalType);
     }
     void Update()
     {
-        
+        // Reserved for per-frame behavior if needed
     }
 
+    /// <summary>
+    /// Builds dialogue for this animal based on its name and type. May grant items or notes
+    /// in the shared GameInformation when specific interactions occur.
+    /// </summary>
     public void TriggerDialogue()
     {
         headshots = new List<Sprite>();
@@ -54,9 +58,9 @@ public class Animals : MonoBehaviour
                         Headshots.AddRange(chickenSprites1);
                         string[] chickenText1 = { "*Cluck Cluck Cluck",
                         "Hello there little one, I may have to borrow an egg or two, although I don't know if I'll give them back.",
-                        "*Ba-kaw?*"};
+                        "*Ba-kaw?*" };
                         DialogueText.AddRange(chickenText1);
-                        gameInformation.HasEggs = true;
+                        gameInformation.HasEggs = true; // Player receives eggs
                     }
                     else
                     {
@@ -79,9 +83,9 @@ public class Animals : MonoBehaviour
                         Headshots.AddRange(cowSprites1);
                         string[] cowText1 = { "*Moo?*",
                         "Sorry Ms.Cow lady, but I'm going to need some of you're milk for Grandpa's Pumpkin Pie.",
-                        "*MOOOO*"};
+                        "*MOOOO*" };
                         DialogueText.AddRange(cowText1);
-                        gameInformation.HasMilk = true;
+                        gameInformation.HasMilk = true; // Player receives milk
                     }
                     else
                     {
@@ -97,16 +101,16 @@ public class Animals : MonoBehaviour
                     Headshots.AddRange(dogSprites);
                     string[] dogTexts = {"*Panting*",
                     "Boy! Get my drawing out of your mouth!",
-                    "*Woof Woof!*"};
+                    "*Woof Woof!*" };
                     DialogueText.AddRange(dogTexts);
-                    gameInformation.HasNote1 = true;
+                    gameInformation.HasNote1 = true; // Player obtains a note
                 }
                 else
                 {
                     Headshots.Add(ah);
                     DialogueText.Add("Woof!");
                 }
-                    break;
+                break;
             case "Crow":
                 Headshots.Add(ah);
                 DialogueText.Add("*KAWWW!*");

@@ -7,31 +7,50 @@ using UnityEditor;
 namespace TMPro.Examples
 {
 
+    /// <summary>
+    /// Debug utility for visualizing text metrics for TextMeshPro objects.
+    /// This component draws gizmos and handles in the scene view to show character, word,
+    /// link, line, mesh and text bounds as well as typographic metrics (ascender, baseline, etc.).
+    /// Note: This script is intended for editor-only debugging and is excluded from builds.
+    /// </summary>
     public class TMP_TextInfoDebugTool : MonoBehaviour
     {
         // Since this script is used for debugging, we exclude it from builds.
         // TODO: Rework this script to make it into an editor utility.
         #if UNITY_EDITOR
+        /// <summary>Show per-character rectangles and metrics.</summary>
         public bool ShowCharacters;
+        /// <summary>Show per-word rectangles.</summary>
         public bool ShowWords;
+        /// <summary>Show link rectangles.</summary>
         public bool ShowLinks;
+        /// <summary>Show per-line rectangles and metrics.</summary>
         public bool ShowLines;
+        /// <summary>Show the bounds of the generated mesh.</summary>
         public bool ShowMeshBounds;
+        /// <summary>Show the bounds of the rendered text region.</summary>
         public bool ShowTextBounds;
         [Space(10)]
         [TextArea(2, 2)]
+        /// <summary>Read-only field that displays simple object statistics in the inspector.</summary>
         public string ObjectStats;
 
+        /// <summary>Reference to the TMP_Text component this debugger is attached to.</summary>
         [SerializeField]
         private TMP_Text m_TextComponent;
 
+        // Cached transform and text info for the TMP object.
         private Transform m_Transform;
         private TMP_TextInfo m_TextInfo;
 
+        // Variables used to scale handle sizes depending on object type.
         private float m_ScaleMultiplier;
         private float m_HandleSize;
 
 
+        /// <summary>
+        /// Draw gizmos in the scene view to visualize the text metrics when editor mode is active.
+        /// </summary>
         void OnDrawGizmos()
         {
             if (m_TextComponent == null)
@@ -94,9 +113,8 @@ namespace TMPro.Examples
 
 
         /// <summary>
-        /// Method to draw a rectangle around each character.
+        /// Method to draw a rectangle around each character and show typographic metrics.
         /// </summary>
-        /// <param name="text"></param>
         void DrawCharactersBounds()
         {
             int characterCount = m_TextInfo.characterCount;
@@ -206,27 +224,18 @@ namespace TMPro.Examples
                    Vector3 labelPosition;
                    float center = (origin + advance) / 2;
 
-                   //float baselineMetrics = 0;
-                   //float ascentlineMetrics = ascentline - baseline;
-                   //float caplineMetrics = capline - baseline;
-                   //float meanlineMetrics = meanline - baseline;
-                   //float descentlineMetrics = descentline - baseline;
-
                    // Ascent Line
                    labelPosition = m_Transform.TransformPoint(new Vector3(center, ascentline, 0));
                    style.alignment = TextAnchor.UpperCenter;
                    Handles.Label(labelPosition, "Ascent Line", style);
-                   //Handles.Label(labelPosition, "Ascent Line (" + ascentlineMetrics.ToString("f3") + ")" , style);
 
                    // Base Line
                    labelPosition = m_Transform.TransformPoint(new Vector3(center, baseline, 0));
                    Handles.Label(labelPosition, "Base Line", style);
-                   //Handles.Label(labelPosition, "Base Line (" + baselineMetrics.ToString("f3") + ")" , style);
 
                    // Descent line
                    labelPosition = m_Transform.TransformPoint(new Vector3(center, descentline, 0));
                    Handles.Label(labelPosition, "Descent Line", style);
-                   //Handles.Label(labelPosition, "Descent Line (" + descentlineMetrics.ToString("f3") + ")" , style);
 
                    if (characterInfo.isVisible)
                    {
@@ -234,13 +243,11 @@ namespace TMPro.Examples
                        labelPosition = m_Transform.TransformPoint(new Vector3(center, capline, 0));
                        style.alignment = TextAnchor.UpperCenter;
                        Handles.Label(labelPosition, "Cap Line", style);
-                       //Handles.Label(labelPosition, "Cap Line (" + caplineMetrics.ToString("f3") + ")" , style);
 
                        // Mean Line
                        labelPosition = m_Transform.TransformPoint(new Vector3(center, meanline, 0));
                        style.alignment = TextAnchor.UpperCenter;
                        Handles.Label(labelPosition, "Mean Line", style);
-                       //Handles.Label(labelPosition, "Mean Line (" + ascentlineMetrics.ToString("f3") + ")" , style);
 
                        // Origin
                        labelPosition = m_Transform.TransformPoint(new Vector3(origin, baseline, 0));
@@ -260,7 +267,6 @@ namespace TMPro.Examples
         /// <summary>
         /// Method to draw rectangles around each word of the text.
         /// </summary>
-        /// <param name="text"></param>
         void DrawWordBounds()
         {
             for (int i = 0; i < m_TextInfo.wordCount; i++)
@@ -301,8 +307,6 @@ namespace TMPro.Examples
                         bottomLeft = new Vector3(currentCharInfo.bottomLeft.x, currentCharInfo.descender, 0);
                         topLeft = new Vector3(currentCharInfo.bottomLeft.x, currentCharInfo.ascender, 0);
 
-                        //Debug.Log("Start Word Region at [" + currentCharInfo.character + "]");
-
                         // If Word is one character
                         if (wInfo.characterCount == 1)
                         {
@@ -315,8 +319,6 @@ namespace TMPro.Examples
 
                             // Draw Region
                             DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
-
-                            //Debug.Log("End Word Region at [" + currentCharInfo.character + "]");
                         }
                     }
 
@@ -332,8 +334,6 @@ namespace TMPro.Examples
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
-
-                        //Debug.Log("End Word Region at [" + currentCharInfo.character + "]");
                     }
                     // If Word is split on more than one line.
                     else if (isBeginRegion && currentLine != m_TextInfo.characterInfo[characterIndex + 1].lineNumber)
@@ -347,7 +347,6 @@ namespace TMPro.Examples
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
-                        //Debug.Log("End Word Region at [" + currentCharInfo.character + "]");
                         maxAscender = -Mathf.Infinity;
                         minDescender = Mathf.Infinity;
 
@@ -364,7 +363,6 @@ namespace TMPro.Examples
         /// <summary>
         /// Draw rectangle around each of the links contained in the text.
         /// </summary>
-        /// <param name="text"></param>
         void DrawLinkBounds()
         {
             TMP_TextInfo textInfo = m_TextComponent.textInfo;
@@ -406,8 +404,6 @@ namespace TMPro.Examples
 
                         bottomLeft = new Vector3(currentCharInfo.bottomLeft.x, currentCharInfo.descender, 0);
                         topLeft = new Vector3(currentCharInfo.bottomLeft.x, currentCharInfo.ascender, 0);
-
-                        //Debug.Log("Start Word Region at [" + currentCharInfo.character + "]");
 
                         // If Link is one character
                         if (linkInfo.linkTextLength == 1)
@@ -468,7 +464,6 @@ namespace TMPro.Examples
         /// <summary>
         /// Draw Rectangles around each lines of the text.
         /// </summary>
-        /// <param name="text"></param>
         void DrawLineBounds()
         {
             int lineCount = m_TextInfo.lineCount;

@@ -5,24 +5,32 @@ using UnityEngine;
 public class Checklist : MonoBehaviour
 {
     [Header("Source File")]
-    [SerializeField] private GameInformation gameInformation;
+    [SerializeField]
+    private GameInformation gameInformation; // Reference to shared game state
 
     [Header("UI Elements")]
-    [SerializeField] private GameObject quest1;
-    [SerializeField] private GameObject quest2;
-    [SerializeField] private GameObject quest3;
+    [SerializeField]
+    private GameObject quest1; // UI panel for quest 1
+    [SerializeField]
+    private GameObject quest2; // UI panel for quest 2 (ingredients)
+    [SerializeField]
+    private GameObject quest3; // UI panel for quest 3
 
-    private GameInformation.Quests currentQuest;
+    private GameInformation.Quests currentQuest; // Cached current quest
 
-    private List<TextMeshProUGUI> ingredients = new List<TextMeshProUGUI>();
+    private List<TextMeshProUGUI> ingredients = new List<TextMeshProUGUI>(); // Text labels for ingredient checklist
 
-    private List<bool> ingredientChecks;
+    private List<bool> ingredientChecks; // Booleans representing collected ingredients
  
     void Start()
     {
+        // Collect the child TMP labels from the quest2 panel to represent ingredients
         ingredients.AddRange(quest2.GetComponentsInChildren<TextMeshProUGUI>());
     }
 
+    /// <summary>
+    /// Refresh UI to reflect the current quest and which ingredients have been collected.
+    /// </summary>
     public void UpdateChecklist()
     {
         currentQuest = gameInformation.CurrentQuests;
@@ -48,7 +56,7 @@ public class Checklist : MonoBehaviour
                 {
                     if (ingredientChecks[counter])
                     {
-                        text.fontStyle = FontStyles.Strikethrough;
+                        text.fontStyle = FontStyles.Strikethrough; // Mark ingredient as collected
                     }
                     counter++;
                 }
